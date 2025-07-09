@@ -2,6 +2,136 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.2.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.1.0...v5.2.0) (2025-07-06)
+
+
+### Features
+
+* S3 Table Metadata and Directory Bucket Tags ([#346](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/346)) ([cc67d6c](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/cc67d6cfdcd1987e2864e452dad55e4a36a8b84e))
+
+## [5.1.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.0.2...v5.1.0) (2025-06-27)
+
+
+### Features
+
+* Added region variable to object and table-bucket submodules ([#344](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/344)) ([b37b7c9](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/b37b7c99da310beca21fdc4cde35d9feb454fd0c))
+
+## [5.0.2](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.0.1...v5.0.2) (2025-06-25)
+
+
+### Bug Fixes
+
+* Fixed output of bucket region ([#343](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/343)) ([59e8060](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/59e806017c1827cc53fe5a4dada16fbf9f30bee0))
+
+## [5.0.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.0.0...v5.0.1) (2025-06-25)
+
+
+### Bug Fixes
+
+* Lower minimum Terraform version to 1.5.7 ([#342](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/342)) ([0392b0f](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/0392b0faa8eb232e859e33eaca25dc43fd9a3646))
+
+## [5.0.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.11.0...v5.0.0) (2025-06-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade AWS provider and min required Terraform version to 6.0 and 1.10 respectively (#335)
+
+### Features
+
+* Upgrade AWS provider and min required Terraform version to 6.0 and 1.10 respectively ([#335](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/335)) ([c37f4c3](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/c37f4c30a9b547b623bbc560e249064101df1b7b))
+
+## [4.11.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.10.1...v4.11.0) (2025-06-17)
+
+
+### Features
+
+* Enable CloudTrail log delivery bucket policy option ([#332](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/332)) ([1a431dd](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/1a431dd0ccc2478399fce247a75caf40a109bb10))
+
+## [4.10.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.10.0...v4.10.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* Include `aws_s3_directory_bucket` ID in `s3_bucket_id` output ([#325](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/325)) ([0d8fc54](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/0d8fc540fef6303c4b6527927152c6f69954579a))
+
+## [4.10.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.9.0...v4.10.0) (2025-05-30)
+
+
+### Features
+
+* Add WAF log delivery policy ([#328](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/328)) ([98210a2](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/98210a2f1bcbfee6bfb13a15dd883e76a17ba0a2))
+
+## [4.9.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.8.0...v4.9.0) (2025-05-16)
+
+
+### Features
+
+* S3 table and table bucket CMK encryption support ([#327](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/327)) ([541232b](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/541232b78c11a51f150d49a9a8167c8b828aa4b5))
+
+## [4.8.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.7.0...v4.8.0) (2025-05-01)
+
+
+### Features
+
+* S3 Table Bucket Support ([#323](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/323)) ([64d61a4](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/64d61a477685c154017543480feee46a2abf3cd5))
+
+## [4.7.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.6.1...v4.7.0) (2025-04-18)
+
+
+### Features
+
+* Add log delivery source organization variables ([#322](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/322)) ([6731ac2](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/6731ac2d77637179cdb048064ea02955485a7c6b))
+
+## [4.6.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.6.0...v4.6.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* Timeout if SQS policy created without explicit version in notification module ([#321](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/321)) ([1b1ca55](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/1b1ca553669bbca0a0c42378a1bab3af5302df4f))
+
+## [4.6.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.5.0...v4.6.0) (2025-02-12)
+
+
+### Features
+
+* Support S3 Directory Bucket ([#310](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/310)) ([0700a07](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/0700a0753cbc9846a6746b921f5eb7817a6d5749))
+
+## [4.5.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.4.0...v4.5.0) (2025-01-23)
+
+
+### Features
+
+* Add optional policy to deny ssec encrypted uploads ([#307](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/307)) ([cfd1452](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/cfd14526fc7f063a43bced5be7db1e4ed3c6f276))
+
+## [4.4.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.3.0...v4.4.0) (2025-01-13)
+
+
+### Features
+
+* Add variable create_lambda_permission in notification module ([#302](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/302)) ([5b71671](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/5b71671533487eec264152701a8e1d11a3113ea9))
+
+## [4.3.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.2.2...v4.3.0) (2024-12-21)
+
+
+### Features
+
+* Added Account-level Public Access Block module, and minor fixes as fallback ([#299](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/299)) ([69f0f4e](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/69f0f4ebfb93969ec8950e92fd32215d718f63c9))
+
+## [4.2.2](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.2.1...v4.2.2) (2024-11-08)
+
+
+### Bug Fixes
+
+* Remove ACL in analytics, inventory, and replication examples ([#292](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/292)) ([1986daa](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/1986daa5634d1fde23997ecd7de1660a9babd427))
+
+## [4.2.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.2.0...v4.2.1) (2024-10-11)
+
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#293](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/293)) ([522fcff](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/522fcffdf90b1325501e021548962f41978aeefc))
+
 ## [4.2.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v4.1.2...v4.2.0) (2024-10-06)
 
 
