@@ -20,6 +20,7 @@ These features of S3 bucket configurations are supported:
 - Account-level Public Access Block
 - S3 Directory Bucket
 - S3 Table Bucket
+- S3 Vectors
 
 ## Usage
 
@@ -97,6 +98,10 @@ module "s3_bucket_for_waf_logs" {
 }
 ```
 
+### Bucket with a custom policy attached
+
+When you need to attach a custom policy to the bucket, you can use the `policy` argument. To keep bucket policy with correct S3 bucket and AWS account properties, you can use the placeholders `_S3_BUCKET_ID_`, `_S3_BUCKET_ARN_`, and `_AWS_ACCOUNT_ID_` in the policy document. Those values will be replaced with the actual values during the policy attachment. This is especially useful when using bucket prefixes.
+
 ## Conditional creation
 
 Sometimes you need to have a way to create S3 resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_bucket`.
@@ -145,20 +150,21 @@ Users of Terragrunt can achieve similar results by using modules provided in the
 - [S3 Account-level Public Access Block](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/master/examples/account-public-access) - Manage S3 account-level Public Access Block.
 - [S3 Directory Bucket](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/master/examples/directory-bucket) - S3 Directory Bucket configuration.
 - [S3 Table Bucket](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/master/examples/table-bucket) - S3 Table Bucket configuration.
+- [S3 Vectors](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/master/examples/vectors) - S3 Vectors vector bucket with indexes configuration.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.2 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.42 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.2 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.42 |
 
 ## Modules
 
@@ -167,7 +173,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_accelerate_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_accelerate_configuration) | resource |
 | [aws_s3_bucket_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
@@ -177,6 +183,7 @@ No modules.
 | [aws_s3_bucket_inventory.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_inventory) | resource |
 | [aws_s3_bucket_lifecycle_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
 | [aws_s3_bucket_logging.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
+| [aws_s3_bucket_metadata_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_metadata_configuration) | resource |
 | [aws_s3_bucket_metric.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_metric) | resource |
 | [aws_s3_bucket_object_lock_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_object_lock_configuration) | resource |
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
@@ -209,7 +216,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_acceleration_status"></a> [acceleration\_status](#input\_acceleration\_status) | (Optional) Sets the accelerate configuration of an existing bucket. Can be Enabled or Suspended. | `string` | `null` | no |
 | <a name="input_access_log_delivery_policy_source_accounts"></a> [access\_log\_delivery\_policy\_source\_accounts](#input\_access\_log\_delivery\_policy\_source\_accounts) | (Optional) List of AWS Account IDs should be allowed to deliver access logs to this bucket. | `list(string)` | `[]` | no |
 | <a name="input_access_log_delivery_policy_source_buckets"></a> [access\_log\_delivery\_policy\_source\_buckets](#input\_access\_log\_delivery\_policy\_source\_buckets) | (Optional) List of S3 bucket ARNs which should be allowed to deliver access logs to this bucket. | `list(string)` | `[]` | no |
@@ -239,10 +246,12 @@ No modules.
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Whether Amazon S3 should block public ACLs for this bucket. | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket. | `bool` | `true` | no |
 | <a name="input_bucket"></a> [bucket](#input\_bucket) | (Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name. | `string` | `null` | no |
+| <a name="input_bucket_namespace"></a> [bucket\_namespace](#input\_bucket\_namespace) | Namespace for the bucket. Determines bucket naming scope. Valid values: account-regional, global. Defaults to global (AWS) | `string` | `null` | no |
 | <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | (Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket. | `string` | `null` | no |
 | <a name="input_control_object_ownership"></a> [control\_object\_ownership](#input\_control\_object\_ownership) | Whether to manage S3 Bucket Ownership Controls on this bucket. | `bool` | `false` | no |
 | <a name="input_cors_rule"></a> [cors\_rule](#input\_cors\_rule) | List of maps containing rules for Cross-Origin Resource Sharing. | `any` | `[]` | no |
 | <a name="input_create_bucket"></a> [create\_bucket](#input\_create\_bucket) | Controls if S3 bucket should be created | `bool` | `true` | no |
+| <a name="input_create_metadata_configuration"></a> [create\_metadata\_configuration](#input\_create\_metadata\_configuration) | Whether to create metadata configuration resource | `bool` | `false` | no |
 | <a name="input_data_redundancy"></a> [data\_redundancy](#input\_data\_redundancy) | Data redundancy. Valid values: `SingleAvailabilityZone` | `string` | `null` | no |
 | <a name="input_expected_bucket_owner"></a> [expected\_bucket\_owner](#input\_expected\_bucket\_owner) | The account ID of the expected bucket owner | `string` | `null` | no |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | (Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. | `bool` | `false` | no |
@@ -258,6 +267,10 @@ No modules.
 | <a name="input_lifecycle_rule"></a> [lifecycle\_rule](#input\_lifecycle\_rule) | List of maps containing configuration of object lifecycle management. | `any` | `[]` | no |
 | <a name="input_location_type"></a> [location\_type](#input\_location\_type) | Location type. Valid values: `AvailabilityZone` or `LocalZone` | `string` | `null` | no |
 | <a name="input_logging"></a> [logging](#input\_logging) | Map containing access bucket logging configuration. | `any` | `{}` | no |
+| <a name="input_metadata_encryption_configuration"></a> [metadata\_encryption\_configuration](#input\_metadata\_encryption\_configuration) | Encryption configuration block | `any` | `null` | no |
+| <a name="input_metadata_inventory_table_configuration_state"></a> [metadata\_inventory\_table\_configuration\_state](#input\_metadata\_inventory\_table\_configuration\_state) | Configuration state of the inventory table, indicating whether the inventory table is enabled or disabled. Valid values: ENABLED, DISABLED | `string` | `null` | no |
+| <a name="input_metadata_journal_table_record_expiration"></a> [metadata\_journal\_table\_record\_expiration](#input\_metadata\_journal\_table\_record\_expiration) | Whether journal table record expiration is enabled or disabled. Valid values: ENABLED, DISABLED | `string` | `null` | no |
+| <a name="input_metadata_journal_table_record_expiration_days"></a> [metadata\_journal\_table\_record\_expiration\_days](#input\_metadata\_journal\_table\_record\_expiration\_days) | Number of days to retain journal table records | `number` | `null` | no |
 | <a name="input_metric_configuration"></a> [metric\_configuration](#input\_metric\_configuration) | Map containing bucket metric configuration. | `any` | `[]` | no |
 | <a name="input_object_lock_configuration"></a> [object\_lock\_configuration](#input\_object\_lock\_configuration) | Map containing S3 object locking configuration. | `any` | `{}` | no |
 | <a name="input_object_lock_enabled"></a> [object\_lock\_enabled](#input\_object\_lock\_enabled) | Whether S3 bucket should have an Object Lock configuration enabled. | `bool` | `false` | no |
@@ -270,6 +283,7 @@ No modules.
 | <a name="input_request_payer"></a> [request\_payer](#input\_request\_payer) | (Optional) Specifies who should bear the cost of Amazon S3 data transfer. Can be either BucketOwner or Requester. By default, the owner of the S3 bucket would incur the costs of any data transfer. See Requester Pays Buckets developer guide for more information. | `string` | `null` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | Whether Amazon S3 should restrict public bucket policies for this bucket. | `bool` | `true` | no |
 | <a name="input_server_side_encryption_configuration"></a> [server\_side\_encryption\_configuration](#input\_server\_side\_encryption\_configuration) | Map containing server-side encryption configuration. | `any` | `{}` | no |
+| <a name="input_skip_destroy_public_access_block"></a> [skip\_destroy\_public\_access\_block](#input\_skip\_destroy\_public\_access\_block) | Whether to skip destroying the S3 Bucket Public Access Block configuration when destroying the bucket. Only used if `public_access_block` is set to true. | `bool` | `true` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A mapping of tags to assign to the bucket. | `map(string)` | `{}` | no |
 | <a name="input_transition_default_minimum_object_size"></a> [transition\_default\_minimum\_object\_size](#input\_transition\_default\_minimum\_object\_size) | The default minimum object size behavior applied to the lifecycle configuration. Valid values: all\_storage\_classes\_128K (default), varies\_by\_storage\_class | `string` | `null` | no |
 | <a name="input_type"></a> [type](#input\_type) | Bucket type. Valid values: `Directory` | `string` | `"Directory"` | no |
@@ -279,15 +293,18 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
+| <a name="output_aws_s3_bucket_versioning_status"></a> [aws\_s3\_bucket\_versioning\_status](#output\_aws\_s3\_bucket\_versioning\_status) | The versioning status of the bucket. Will be 'Enabled', 'Suspended', or 'Disabled'. |
 | <a name="output_s3_bucket_arn"></a> [s3\_bucket\_arn](#output\_s3\_bucket\_arn) | The ARN of the bucket. Will be of format arn:aws:s3:::bucketname. |
 | <a name="output_s3_bucket_bucket_domain_name"></a> [s3\_bucket\_bucket\_domain\_name](#output\_s3\_bucket\_bucket\_domain\_name) | The bucket domain name. Will be of format bucketname.s3.amazonaws.com. |
+| <a name="output_s3_bucket_bucket_namespace"></a> [s3\_bucket\_bucket\_namespace](#output\_s3\_bucket\_bucket\_namespace) | The namespace of the bucket. |
 | <a name="output_s3_bucket_bucket_regional_domain_name"></a> [s3\_bucket\_bucket\_regional\_domain\_name](#output\_s3\_bucket\_bucket\_regional\_domain\_name) | The bucket region-specific domain name. The bucket domain name including the region name, please refer here for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent redirect issues from CloudFront to S3 Origin URL. |
 | <a name="output_s3_bucket_hosted_zone_id"></a> [s3\_bucket\_hosted\_zone\_id](#output\_s3\_bucket\_hosted\_zone\_id) | The Route 53 Hosted Zone ID for this bucket's region. |
 | <a name="output_s3_bucket_id"></a> [s3\_bucket\_id](#output\_s3\_bucket\_id) | The name of the bucket. |
 | <a name="output_s3_bucket_lifecycle_configuration_rules"></a> [s3\_bucket\_lifecycle\_configuration\_rules](#output\_s3\_bucket\_lifecycle\_configuration\_rules) | The lifecycle rules of the bucket, if the bucket is configured with lifecycle rules. If not, this will be an empty string. |
 | <a name="output_s3_bucket_policy"></a> [s3\_bucket\_policy](#output\_s3\_bucket\_policy) | The policy of the bucket, if the bucket is configured with a policy. If not, this will be an empty string. |
 | <a name="output_s3_bucket_region"></a> [s3\_bucket\_region](#output\_s3\_bucket\_region) | The AWS region this bucket resides in. |
+| <a name="output_s3_bucket_tags"></a> [s3\_bucket\_tags](#output\_s3\_bucket\_tags) | Tags of the bucket. |
 | <a name="output_s3_bucket_website_domain"></a> [s3\_bucket\_website\_domain](#output\_s3\_bucket\_website\_domain) | The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. |
 | <a name="output_s3_bucket_website_endpoint"></a> [s3\_bucket\_website\_endpoint](#output\_s3\_bucket\_website\_endpoint) | The website endpoint, if the bucket is configured with a website. If not, this will be an empty string. |
 | <a name="output_s3_directory_bucket_arn"></a> [s3\_directory\_bucket\_arn](#output\_s3\_directory\_bucket\_arn) | ARN of the directory bucket. |

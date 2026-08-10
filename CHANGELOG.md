@@ -2,6 +2,153 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.15.4](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.15.3...v5.15.4) (2026-08-06)
+
+### Bug Fixes
+
+* Update GitHub Actions and pre-commit hook versions ([#404](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/404)) ([58a531d](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/58a531d293ab0fe3a06307f9c40c1bed7ef1239f))
+
+## [5.15.3](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.15.2...v5.15.3) (2026-07-28)
+
+### Bug Fixes
+
+* Wildcard region in WAF/Log delivery policy to support CloudFront ([#397](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/397)) ([9e8dd5e](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/9e8dd5ed3206532eb85df2e3e6a1f04201d16726))
+
+## [5.15.2](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.15.1...v5.15.2) (2026-07-28)
+
+### Bug Fixes
+
+* Correctly guard analytics/inventory destination policy ([#401](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/401)) ([84eac6c](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/84eac6ce110eddcd742cdfc2bccd344b3b802288))
+
+## [5.15.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.15.0...v5.15.1) (2026-07-18)
+
+### Bug Fixes
+
+* Replace deprecated data.aws_region.current.name with .region in example ([#402](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/402)) ([d2f5642](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/d2f564255b22b7467550ed5bab189e571d7b9fb1))
+
+## [5.15.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.14.1...v5.15.0) (2026-07-18)
+
+### Features
+
+* Expose bucket_namespace output (References [#390](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/390)) ([#395](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/395)) ([0645a50](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/0645a50559ccd7c69033cd86eef4989e6272a6af))
+
+## [5.14.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.14.0...v5.14.1) (2026-06-23)
+
+### Bug Fixes
+
+* Prevent deprecation warning on lifecycle rules output (Fixes [#389](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/389)) ([#394](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/394)) ([0c0fb28](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/0c0fb28347cc253088fe3966dca67420d39fbbe9))
+
+## [5.14.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.13.0...v5.14.0) (2026-05-29)
+
+### Features
+
+* Support Vector Buckets ([#392](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/392)) ([7fd971d](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/7fd971d43bf320d8bf345e8f780877e48e88a4ce))
+
+## [5.13.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.12.0...v5.13.0) (2026-05-04)
+
+### Features
+
+* S3 Inventory for Directory buckets ([#387](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/387)) ([435595a](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/435595a0f33d275f645f3a5e7288a71dd9052d47))
+
+## [5.12.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.11.0...v5.12.0) (2026-04-02)
+
+### Features
+
+* Directory bucket metrics ([#384](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/384)) ([deeaa20](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/deeaa200f8241f641534520f11a5e488c6472991))
+
+## [5.11.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.10.0...v5.11.0) (2026-03-19)
+
+### Features
+
+* Support `bucket_namespace` ([#382](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/382)) ([d220952](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/d2209526d380993d821cb2a25faa4a80d59cd178))
+
+## [5.10.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.9.1...v5.10.0) (2026-01-08)
+
+### Features
+
+* Add provider meta user-agent ([#373](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/373)) ([8eecd4b](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/8eecd4bfe167b3606755a0f8150514e9dcb2bf67))
+
+## [5.9.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.9.0...v5.9.1) (2025-12-12)
+
+### Bug Fixes
+
+* Replace static `aws` partition with dynamic data source ([#369](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/369)) ([77dfafa](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/77dfafa34609908796c42d14fe551a6eee0bc09a))
+
+## [5.9.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.8.2...v5.9.0) (2025-11-23)
+
+### Features
+
+* Support `blocked_encryption_types` and table bucket tags ([#367](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/367)) ([2fb1c33](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/2fb1c33b99d485e29470cc0c0ba2faf3931d1ecc))
+
+## [5.8.2](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.8.1...v5.8.2) (2025-10-21)
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#366](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/366)) ([9acf3f7](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/9acf3f715ad1f9a7bf59cb655baf6ef9f8af26be))
+
+## [5.8.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.8.0...v5.8.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* Fixed placeholders for disabled buckets ([#365](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/365)) ([546db8b](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/546db8be245f7b3d98e17210a86dbadb4cec6139))
+
+## [5.8.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.7.1...v5.8.0) (2025-10-15)
+
+
+### Features
+
+* Added bucket policy placeholders ([#363](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/363)) ([f687342](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/f687342b73741bc38b538ea1bf36ea31204828d8))
+
+## [5.7.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.7.0...v5.7.1) (2025-10-15)
+
+
+### Bug Fixes
+
+* Adds replication config dependency to lifecycle config ([#361](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/361)) ([9bb3c53](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/9bb3c53cb37ea5f11d8b00c74804f9015452920f))
+
+## [5.7.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.6.0...v5.7.0) (2025-08-27)
+
+
+### Features
+
+* Add tags in output.tf [#355](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/355) ([#357](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/357)) ([4586f12](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/4586f12bb5b00ae73907ab0067bc96c9ddde0009))
+
+## [5.6.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.5.0...v5.6.0) (2025-08-25)
+
+
+### Features
+
+* Add skip_destroy argument in the aws_s3_bucket_public_access_bl… ([#352](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/352)) ([8833269](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/8833269e206a62030a259032cf039db5333e8160))
+
+## [5.5.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.4.0...v5.5.0) (2025-08-20)
+
+
+### Features
+
+* Add region parameter to notification module ([#354](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/354)) ([2dd4364](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/2dd4364b67d89cb9c881be465e5e4196ef8dea8f))
+
+## [5.4.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.3.1...v5.4.0) (2025-08-11)
+
+
+### Features
+
+* Support bucket metadata config ([#351](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/351)) ([2a25737](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/2a25737a72c7e862ea297cea063207a3aa56b1a8))
+
+## [5.3.1](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.3.0...v5.3.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* Use the specified region to retrieve the current AWS region ([#348](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/348)) ([453fcb9](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/453fcb9d7e6b38755c3f5262da042bf0c887c6b5))
+
+## [5.3.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.2.0...v5.3.0) (2025-08-05)
+
+
+### Features
+
+* Add bucket versioning status as an output ([#350](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/issues/350)) ([525f43c](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/525f43c045a0fd141ef9573b83d4be5b9c266787))
+
 ## [5.2.0](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/compare/v5.1.0...v5.2.0) (2025-07-06)
 
 

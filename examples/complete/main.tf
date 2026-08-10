@@ -18,6 +18,8 @@ data "aws_canonical_user_id" "current" {}
 
 data "aws_cloudfront_log_delivery_canonical_user_id" "cloudfront" {}
 
+data "aws_region" "current" {}
+
 resource "random_pet" "this" {
   length = 2
 }
@@ -59,6 +61,27 @@ data "aws_iam_policy_document" "bucket_policy" {
     resources = [
       "arn:aws:s3:::${local.bucket_name}",
     ]
+  }
+
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.this.arn]
+    }
+
+    actions = [
+      "s3:ListBucket",
+    ]
+
+    resources = [
+      "_S3_BUCKET_ARN_",
+    ]
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:PrincipalAccount"
+      values   = ["_AWS_ACCOUNT_ID_"]
+    }
   }
 }
 
@@ -113,6 +136,15 @@ module "simple_bucket" {
   source = "../../"
 
   bucket = "simple-${random_pet.this.id}"
+
+  force_destroy = true
+}
+
+module "simple_account_regional_bucket" {
+  source = "../../"
+
+  bucket           = format("simple-%s-%s-an", data.aws_caller_identity.current.account_id, data.aws_region.current.region)
+  bucket_namespace = "account-regional"
 
   force_destroy = true
 }
@@ -220,6 +252,7 @@ module "s3_bucket" {
         kms_master_key_id = aws_kms_key.objects.arn
         sse_algorithm     = "aws:kms"
       }
+      blocked_encryption_types = ["SSE-C"]
     }
   }
 
@@ -375,4 +408,23 @@ module "s3_bucket" {
       name = "all"
     }
   ]
+
+  # metadata configuration example
+  # https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-overview.html
+  # https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-configuring.html
+  # only available in supported regions: https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-restrictions.html
+
+  # create_metadata_configuration                 = true
+  # metadata_inventory_table_configuration_state  = "ENABLED"
+  # metadata_journal_table_record_expiration      = "ENABLED"
+  # metadata_journal_table_record_expiration_days = 7
+  # metadata_encryption_configuration = {
+  #   sse_algorithm = "AES256"
+  # }
+}
+
+module "disabled" {
+  source = "../../"
+
+  create_bucket = false
 }

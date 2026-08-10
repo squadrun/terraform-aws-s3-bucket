@@ -18,6 +18,11 @@ output "s3_bucket_bucket_regional_domain_name" {
   value       = try(aws_s3_bucket.this[0].bucket_regional_domain_name, "")
 }
 
+output "s3_bucket_bucket_namespace" {
+  description = "The namespace of the bucket."
+  value       = try(aws_s3_bucket.this[0].bucket_namespace, null)
+}
+
 output "s3_bucket_hosted_zone_id" {
   description = "The Route 53 Hosted Zone ID for this bucket's region."
   value       = try(aws_s3_bucket.this[0].hosted_zone_id, "")
@@ -25,7 +30,11 @@ output "s3_bucket_hosted_zone_id" {
 
 output "s3_bucket_lifecycle_configuration_rules" {
   description = "The lifecycle rules of the bucket, if the bucket is configured with lifecycle rules. If not, this will be an empty string."
-  value       = try(aws_s3_bucket_lifecycle_configuration.this[0].rule, "")
+  value = try([
+    for r in aws_s3_bucket_lifecycle_configuration.this[0].rule : {
+      for k, v in r : k => v if k != "prefix"
+    }
+  ], "")
 }
 
 output "s3_bucket_policy" {
@@ -56,4 +65,14 @@ output "s3_directory_bucket_name" {
 output "s3_directory_bucket_arn" {
   description = "ARN of the directory bucket."
   value       = try(aws_s3_directory_bucket.this[0].arn, null)
+}
+
+output "aws_s3_bucket_versioning_status" {
+  description = "The versioning status of the bucket. Will be 'Enabled', 'Suspended', or 'Disabled'."
+  value       = try(aws_s3_bucket_versioning.this[0].versioning_configuration[0].status, null)
+}
+
+output "s3_bucket_tags" {
+  description = "Tags of the bucket."
+  value       = try(aws_s3_bucket.this[0].tags, {})
 }

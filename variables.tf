@@ -118,6 +118,12 @@ variable "bucket_prefix" {
   default     = null
 }
 
+variable "bucket_namespace" {
+  description = "Namespace for the bucket. Determines bucket naming scope. Valid values: account-regional, global. Defaults to global (AWS)"
+  type        = string
+  default     = null
+}
+
 variable "acl" {
   description = "(Optional) The canned ACL to apply. Conflicts with `grant`"
   type        = string
@@ -328,6 +334,12 @@ variable "block_public_policy" {
   default     = true
 }
 
+variable "skip_destroy_public_access_block" {
+  description = "Whether to skip destroying the S3 Bucket Public Access Block configuration when destroying the bucket. Only used if `public_access_block` is set to true."
+  type        = bool
+  default     = true
+}
+
 variable "ignore_public_acls" {
   description = "Whether Amazon S3 should ignore public ACLs for this bucket."
   type        = bool
@@ -379,6 +391,36 @@ variable "availability_zone_id" {
 
 variable "location_type" {
   description = "Location type. Valid values: `AvailabilityZone` or `LocalZone`"
+  type        = string
+  default     = null
+}
+
+variable "create_metadata_configuration" {
+  description = "Whether to create metadata configuration resource"
+  type        = bool
+  default     = false
+}
+
+variable "metadata_inventory_table_configuration_state" {
+  description = "Configuration state of the inventory table, indicating whether the inventory table is enabled or disabled. Valid values: ENABLED, DISABLED"
+  type        = string
+  default     = null
+}
+
+variable "metadata_encryption_configuration" {
+  description = "Encryption configuration block"
+  type        = any
+  default     = null
+}
+
+variable "metadata_journal_table_record_expiration_days" {
+  description = "Number of days to retain journal table records"
+  type        = number
+  default     = null
+}
+
+variable "metadata_journal_table_record_expiration" {
+  description = "Whether journal table record expiration is enabled or disabled. Valid values: ENABLED, DISABLED"
   type        = string
   default     = null
 }

@@ -6,15 +6,15 @@ Creates S3 Table Bucket and Tables with various configurations.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.2 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.42 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.2 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.42 |
 
 ## Modules
 
@@ -23,7 +23,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_s3tables_table.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3tables_table) | resource |
 | [aws_s3tables_table_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3tables_table_bucket) | resource |
 | [aws_s3tables_table_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3tables_table_bucket_policy) | resource |
@@ -34,7 +34,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_create"></a> [create](#input\_create) | Whether to create s3 table resources | `bool` | `true` | no |
 | <a name="input_create_table_bucket_policy"></a> [create\_table\_bucket\_policy](#input\_create\_table\_bucket\_policy) | Whether to create s3 table bucket policy | `bool` | `false` | no |
 | <a name="input_encryption_configuration"></a> [encryption\_configuration](#input\_encryption\_configuration) | Map of encryption configurations | `any` | `null` | no |
@@ -46,11 +46,12 @@ No modules.
 | <a name="input_table_bucket_policy_statements"></a> [table\_bucket\_policy\_statements](#input\_table\_bucket\_policy\_statements) | A map of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage | `any` | `{}` | no |
 | <a name="input_table_bucket_source_policy_documents"></a> [table\_bucket\_source\_policy\_documents](#input\_table\_bucket\_source\_policy\_documents) | List of IAM policy documents that are merged together into the exported document. Statements must have unique `sid`s | `list(string)` | `[]` | no |
 | <a name="input_tables"></a> [tables](#input\_tables) | Map of table configurations | `any` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Key-value map of resource tags | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_s3_table_arns"></a> [s3\_table\_arns](#output\_s3\_table\_arns) | The table ARNs. |
 | <a name="output_s3_table_bucket_arn"></a> [s3\_table\_bucket\_arn](#output\_s3\_table\_bucket\_arn) | ARN of the table bucket. |
 | <a name="output_s3_table_bucket_created_at"></a> [s3\_table\_bucket\_created\_at](#output\_s3\_table\_bucket\_created\_at) | Date and time when the bucket was created. |

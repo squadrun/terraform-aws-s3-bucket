@@ -1,4 +1,6 @@
-data "aws_region" "current" {}
+data "aws_region" "current" {
+  region = var.region
+}
 
 data "aws_canonical_user_id" "this" {
   count = local.create_bucket && local.create_bucket_acl && try(var.owner["id"], null) == null ? 1 : 0
@@ -12,7 +14,25 @@ locals {
 
   create_bucket_acl = (var.acl != null && var.acl != "null") || length(local.grants) > 0
 
-  attach_policy = var.attach_require_latest_tls_policy || var.attach_access_log_delivery_policy || var.attach_elb_log_delivery_policy || var.attach_lb_log_delivery_policy || var.attach_cloudtrail_log_delivery_policy || var.attach_deny_insecure_transport_policy || var.attach_inventory_destination_policy || var.attach_deny_incorrect_encryption_headers || var.attach_deny_incorrect_kms_key_sse || var.attach_deny_unencrypted_object_uploads || var.attach_deny_ssec_encrypted_object_uploads || var.attach_policy || var.attach_waf_log_delivery_policy
+  attach_policy = var.attach_require_latest_tls_policy || var.attach_access_log_delivery_policy || var.attach_elb_log_delivery_policy || var.attach_lb_log_delivery_policy || var.attach_cloudtrail_log_delivery_policy || var.attach_deny_insecure_transport_policy || var.attach_inventory_destination_policy || var.attach_analytics_destination_policy || var.attach_deny_incorrect_encryption_headers || var.attach_deny_incorrect_kms_key_sse || var.attach_deny_unencrypted_object_uploads || var.attach_deny_ssec_encrypted_object_uploads || var.attach_policy || var.attach_waf_log_delivery_policy
+
+  # Placeholders in the policy document to be replaced with the actual values
+  policy_placeholders = {
+    "_S3_BUCKET_ID_"   = try(var.is_directory_bucket ? aws_s3_directory_bucket.this[0].bucket : aws_s3_bucket.this[0].id, null),
+    "_S3_BUCKET_ARN_"  = try(var.is_directory_bucket ? aws_s3_directory_bucket.this[0].arn : aws_s3_bucket.this[0].arn, null),
+    "_AWS_ACCOUNT_ID_" = try(data.aws_caller_identity.current.account_id, null)
+  }
+
+  policy = local.create_bucket && local.attach_policy ? replace(
+    replace(
+      replace(
+        data.aws_iam_policy_document.combined[0].json,
+        "_S3_BUCKET_ID_", local.policy_placeholders["_S3_BUCKET_ID_"]
+      ),
+      "_S3_BUCKET_ARN_", local.policy_placeholders["_S3_BUCKET_ARN_"]
+    ),
+    "_AWS_ACCOUNT_ID_", local.policy_placeholders["_AWS_ACCOUNT_ID_"]
+  ) : ""
 
   # Variables with type `any` should be jsonencode()'d when value is coming from Terragrunt
   grants               = try(jsondecode(var.grant), var.grant)
@@ -27,8 +47,9 @@ resource "aws_s3_bucket" "this" {
 
   region = var.region
 
-  bucket        = var.bucket
-  bucket_prefix = var.bucket_prefix
+  bucket           = var.bucket
+  bucket_prefix    = var.bucket_prefix
+  bucket_namespace = var.bucket_namespace
 
   force_destroy       = var.force_destroy
   object_lock_enabled = var.object_lock_enabled
@@ -227,6 +248,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
           kms_master_key_id = try(apply_server_side_encryption_by_default.value.kms_master_key_id, null)
         }
       }
+      blocked_encryption_types = try(rule.value.blocked_encryption_types, null)
     }
   }
 }
@@ -391,8 +413,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     }
   }
 
-  # Must have bucket versioning enabled first
-  depends_on = [aws_s3_bucket_versioning.this]
+  depends_on = [
+    # Must have bucket versioning enabled first
+    aws_s3_bucket_versioning.this,
+    # Must wait for replication configuration to propagate
+    aws_s3_bucket_replication_configuration.this
+  ]
 }
 
 resource "aws_s3_bucket_object_lock_configuration" "this" {
@@ -590,7 +616,7 @@ resource "aws_s3_bucket_policy" "this" {
   # Ref: https://github.com/hashicorp/terraform-provider-aws/issues/7628
 
   bucket = var.is_directory_bucket ? aws_s3_directory_bucket.this[0].bucket : aws_s3_bucket.this[0].id
-  policy = data.aws_iam_policy_document.combined[0].json
+  policy = local.policy
 
   depends_on = [
     aws_s3_bucket_public_access_block.this
@@ -889,7 +915,7 @@ data "aws_iam_policy_document" "waf_log_delivery" {
 
     condition {
       test     = "ArnLike"
-      values   = ["arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.id}:*"]
+      values   = ["arn:${data.aws_partition.current.partition}:logs:*:${data.aws_caller_identity.current.id}:*"]
       variable = "aws:SourceArn"
     }
   }
@@ -920,7 +946,7 @@ data "aws_iam_policy_document" "waf_log_delivery" {
 
     condition {
       test     = "ArnLike"
-      values   = ["arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.id}:*"]
+      values   = ["arn:${data.aws_partition.current.partition}:logs:*:${data.aws_caller_identity.current.id}:*"]
       variable = "aws:SourceArn"
     }
   }
@@ -1151,6 +1177,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
   block_public_policy     = var.block_public_policy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
+  skip_destroy            = var.skip_destroy_public_access_block
 }
 
 resource "aws_s3_bucket_ownership_controls" "this" {
@@ -1203,29 +1230,30 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "this" {
 }
 
 resource "aws_s3_bucket_metric" "this" {
-  for_each = { for k, v in local.metric_configuration : k => v if local.create_bucket && !var.is_directory_bucket }
+  for_each = { for k, v in local.metric_configuration : k => v if local.create_bucket }
 
   region = var.region
 
   name   = each.value.name
-  bucket = aws_s3_bucket.this[0].id
+  bucket = var.is_directory_bucket ? aws_s3_directory_bucket.this[0].bucket : aws_s3_bucket.this[0].id
 
   dynamic "filter" {
     for_each = length(try(flatten([each.value.filter]), [])) == 0 ? [] : [true]
     content {
-      prefix = try(each.value.filter.prefix, null)
-      tags   = try(each.value.filter.tags, null)
+      prefix       = try(each.value.filter.prefix, null)
+      tags         = var.is_directory_bucket ? null : try(each.value.filter.tags, null)
+      access_point = try(each.value.filter.access_point, null)
     }
   }
 }
 
 resource "aws_s3_bucket_inventory" "this" {
-  for_each = { for k, v in var.inventory_configuration : k => v if local.create_bucket && !var.is_directory_bucket }
+  for_each = { for k, v in var.inventory_configuration : k => v if local.create_bucket }
 
   region = var.region
 
   name                     = each.key
-  bucket                   = try(each.value.bucket, aws_s3_bucket.this[0].id)
+  bucket                   = try(each.value.bucket, var.is_directory_bucket ? aws_s3_directory_bucket.this[0].bucket : aws_s3_bucket.this[0].id)
   included_object_versions = each.value.included_object_versions
   enabled                  = try(each.value.enabled, true)
   optional_fields          = try(each.value.optional_fields, null)
@@ -1277,7 +1305,7 @@ resource "aws_s3_bucket_inventory" "this" {
 # Inventory and analytics destination bucket requires a bucket policy to allow source to PutObjects
 # https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies.html#example-bucket-policies-use-case-9
 data "aws_iam_policy_document" "inventory_and_analytics_destination_policy" {
-  count = local.create_bucket && !var.is_directory_bucket && var.attach_inventory_destination_policy || var.attach_analytics_destination_policy ? 1 : 0
+  count = local.create_bucket && !var.is_directory_bucket && (var.attach_inventory_destination_policy || var.attach_analytics_destination_policy) ? 1 : 0
 
   statement {
     sid    = "destinationInventoryAndAnalyticsPolicy"
@@ -1356,6 +1384,34 @@ resource "aws_s3_bucket_analytics_configuration" "this" {
             prefix            = try(each.value.storage_class_analysis.export_prefix, null)
           }
         }
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_metadata_configuration" "this" {
+  count = local.create_bucket && var.create_metadata_configuration ? 1 : 0
+
+  bucket = aws_s3_bucket.this[0].bucket
+  region = var.region
+
+  metadata_configuration {
+    inventory_table_configuration {
+      configuration_state = var.metadata_inventory_table_configuration_state
+
+      dynamic "encryption_configuration" {
+        for_each = var.metadata_encryption_configuration != null ? [var.metadata_encryption_configuration] : []
+        content {
+          kms_key_arn   = try(encryption_configuration.value.kms_key_arn, null)
+          sse_algorithm = encryption_configuration.value.sse_algorithm
+        }
+      }
+    }
+
+    journal_table_configuration {
+      record_expiration {
+        days       = var.metadata_journal_table_record_expiration_days
+        expiration = var.metadata_journal_table_record_expiration
       }
     }
   }
